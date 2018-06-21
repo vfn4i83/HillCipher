@@ -24,7 +24,14 @@ public class Cipher {
 	int in3 = 0;
 	int in4 = 0;
 	int determinante;
-
+	// iza	
+	int res1 = 0;
+	int res2 = 0;
+	int res3 = 0;
+	int res4 = 0;
+	int total2 = 0;	
+	// iza
+	
 	// double resto;
 	String texto;
 
@@ -43,36 +50,42 @@ public class Cipher {
 		int in4 = 0;
 		int determinante;
 		double resto;
-
+// iza
+		int cont = 0;
+		int res1 = 0;
+		int res2 = 0;
+		int res3 = 0;
+		int res4 = 0;
+		int total2 = 0;
+// iza
 		input = new Scanner(System.in);
 
-		System.out.println("+Por favor, entre com a Chave!");
+		System.out.println("+Entre com a Matriz");
 		
 		do {
 			ok = false;
-			System.out.print("|-Digite 1º Nº: ");
+			System.out.print("|a11: ");
 			n1 = input.nextInt();
-			System.out.print("|-Digite 2º Nº: ");
+			System.out.print("|a12: ");
 			n2 = input.nextInt();
-			System.out.print("|-Digite 3º Nº: ");
+			System.out.print("|a21: ");
 			n3 = input.nextInt();
-			System.out.print("|-Digite 4º Nº: ");
+			System.out.print("|a22: ");
 			n4 = input.nextInt();
-			System.out
-					.println("****************************************************************" + '\n');
-
-			n1 = 2;
-			n2 = 1;
-			n3 = -1;
-			n4 = 4;
+			System.out.printf(" %n");
 
 			// matriz inversa.
 			in1 = n4;
 			in4 = n1;
 			in2 = n2 * (-1);
 			in3 = n3 * (-1);
+			System.out.println("Matriz Inversa:");
+			System.out.printf("a11: %d  a12: %d  a21: %d  a22: %d %n",  in1, in2, in3, in4);	
 
+			
 			determinante = ((n1 * n4) - (n3 * n2));
+			System.out.printf("Valor da Determinante: %d %n", determinante );
+
 			if (determinante != 0) {
 				resto = determinante % 2;
 
@@ -99,6 +112,68 @@ public class Cipher {
 
 		} while (ok);
 
+		// calcular valor chave determinante
+		do {
+			cont++;
+			int total1 = 256 * cont + 1;
+			resto = total1 % determinante;
+			if (resto == 0.0) {
+				total2 = total1 / determinante;
+			}
+		} while (resto != 0);
+
+		res1 = total2 * in1;
+		res2 = total2 * in2;
+		res3 = total2 * in3;
+		res4 = total2 * in4;
+		
+		System.out.printf("Valor encontrado p/ calculo da inversa: %d %n", total2 );
+		
+		if (res1 < 0) {
+			do {
+				res1 = res1 + 256;
+			} while (res1 <= 0);
+		}
+
+		if (res2 < 0) {
+			do {
+				res2 = res2 + 256;
+			} while (res2 <= 0);
+		}
+
+		if (res3 < 0) {
+			do {
+				res3 = res3 + 256;
+			} while (res3 <= 0);
+		}
+
+		if (res4 < 0) {
+			do {
+				res4 = res4 + 256;
+			} while (res4 <= 0);
+		}
+
+		if (res1 > 256) {
+			res1 = res1 % 256;
+		}
+		if (res2 > 256) {
+			res2 = res2 % 256;
+		}
+		if (res3 > 256) {
+			res3 = res3 % 256;
+		}
+		if (res4 > 256) {
+			res4 = res4 % 256;
+		}
+		
+		this.res1 = res1;
+		this.res2 = res2;
+		this.res3 = res3;
+		this.res4 = res4;
+		this.total2 = total2;
+// valor calculado da deteminante		
+		
+		
 		this.n1 = n1;
 		this.n2 = n2;
 		this.n3 = n3;
@@ -112,6 +187,8 @@ public class Cipher {
 	}
 
 	public byte[] encrypt(byte[] msgData) throws IOException {
+
+		List<Character> char02 = new ArrayList<Character>();
 
 		// rotina para cifrar.
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -169,20 +246,28 @@ public class Cipher {
 
 			encrip.add(result1);
 			encrip.add(result2);
+			
+			char02.add(asciiTable.get(result1));
+			char02.add(asciiTable.get(result2));
+			
 		}
 		// ...Converte List<Integer> p/ byte[]
 		for (Integer integer : encrip) {
 			out.writeUTF(Integer.toString(integer));
 		}
-
+		System.out.println("Valor Ascii do texto: " + asci);
+		System.out.printf(" %n");
+		System.out.println("Texto Cifrado: " + char02);
+		System.out.println("Valor Ascii Cifrado: " + encrip);
+		
 		return baos.toByteArray();
 	}
 
 	public byte[] decrypt(byte[] msgData) throws IOException {
 
-		int cont = 0;
-		int resto;
-		int total2 = 0;
+//		int cont = 0;
+//		int resto;
+//		int total2 = 0;
 		List<Character> decryptText = new ArrayList<Character>();
 		List<Integer> encryptData = new ArrayList<Integer>();
 
@@ -194,56 +279,56 @@ public class Cipher {
 			encryptData.add(element);
 		}
 
-		do {
-			cont++;
-			int total1 = 256 * cont + 1;
-			resto = total1 % determinante;
-			if (resto == 0.0) {
-				total2 = total1 / determinante;
-			}
-		} while (resto != 0);
-
-		int res1 = total2 * in1;
-		int res2 = total2 * in2;
-		int res3 = total2 * in3;
-		int res4 = total2 * in4;
-
-		if (res1 < 0) {
-			do {
-				res1 = res1 + 256;
-			} while (res1 <= 0);
-		}
-
-		if (res2 < 0) {
-			do {
-				res2 = res2 + 256;
-			} while (res2 <= 0);
-		}
-
-		if (res3 < 0) {
-			do {
-				res3 = res3 + 256;
-			} while (res3 <= 0);
-		}
-
-		if (res4 < 0) {
-			do {
-				res4 = res4 + 256;
-			} while (res4 <= 0);
-		}
-
-		if (res1 > 256) {
-			res1 = res1 % 256;
-		}
-		if (res2 > 256) {
-			res2 = res2 % 256;
-		}
-		if (res3 > 256) {
-			res3 = res3 % 256;
-		}
-		if (res4 > 256) {
-			res4 = res4 % 256;
-		}
+//		do {
+//			cont++;
+//			int total1 = 256 * cont + 1;
+//			resto = total1 % determinante;
+//			if (resto == 0.0) {
+//				total2 = total1 / determinante;
+//			}
+//		} while (resto != 0);
+//
+//		int res1 = total2 * in1;
+//		int res2 = total2 * in2;
+//		int res3 = total2 * in3;
+//		int res4 = total2 * in4;
+//
+//		if (res1 < 0) {
+//			do {
+//				res1 = res1 + 256;
+//			} while (res1 <= 0);
+//		}
+//
+//		if (res2 < 0) {
+//			do {
+//				res2 = res2 + 256;
+//			} while (res2 <= 0);
+//		}
+//
+//		if (res3 < 0) {
+//			do {
+//				res3 = res3 + 256;
+//			} while (res3 <= 0);
+//		}
+//
+//		if (res4 < 0) {
+//			do {
+//				res4 = res4 + 256;
+//			} while (res4 <= 0);
+//		}
+//
+//		if (res1 > 256) {
+//			res1 = res1 % 256;
+//		}
+//		if (res2 > 256) {
+//			res2 = res2 % 256;
+//		}
+//		if (res3 > 256) {
+//			res3 = res3 % 256;
+//		}
+//		if (res4 > 256) {
+//			res4 = res4 % 256;
+//		}
 
 		// rotina para decifrar de hill.
 		for (int i = 0; i < encryptData.size(); i += 2) {

@@ -33,7 +33,8 @@ public class Servidor {
 					try {
 						int tamanho = entrada.readInt();
 						byte[] encryptedData = new byte[tamanho];
-						entrada.readFully(encryptedData, 0, encryptedData.length);
+						entrada.readFully(encryptedData, 0,
+								encryptedData.length);
 						byte[] decryptData = cipher.decrypt(encryptedData);
 						String decryptMsg = new String(decryptData);
 						System.out.println(">Cliente diz: " + decryptMsg);
@@ -49,8 +50,11 @@ public class Servidor {
 				System.out.println("»Chat iniciado..." + '\n');
 				while (true) {
 					try {
+						//System.out.println("»Eu servidor..." + '\n');
+						System.out.println("»»");
 						String resposta = input.nextLine();
-						byte[] encryptData = cipher.encrypt(resposta.getBytes());
+						byte[] encryptData = cipher
+								.encrypt(resposta.getBytes());
 						saida.writeInt(encryptData.length);
 						saida.write(encryptData);
 					} catch (Exception e) {
