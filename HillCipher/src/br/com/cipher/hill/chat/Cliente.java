@@ -32,7 +32,8 @@ public class Cliente {
 					try {
 						int tamanho = entrada.readInt();
 						byte[] encryptedData = new byte[tamanho];
-						entrada.readFully(encryptedData, 0, encryptedData.length);
+						entrada.readFully(encryptedData, 0,
+								encryptedData.length);
 						byte[] decryptData = cipher.decrypt(encryptedData);
 						String decryptMsg = new String(decryptData);
 						System.out.println(">Servidor diz: " + decryptMsg);
@@ -51,8 +52,11 @@ public class Cliente {
 				input = new Scanner(System.in);
 				while (true) {
 					try {
+						//System.out.println("»Eu cliente..." + '\n');
+						System.out.println("»»");
 						String resposta = input.nextLine();
-						byte[] encryptData = cipher.encrypt(resposta.getBytes());
+						byte[] encryptData = cipher
+								.encrypt(resposta.getBytes());
 						saida.writeInt(encryptData.length);
 						saida.write(encryptData);
 					} catch (Exception e) {
